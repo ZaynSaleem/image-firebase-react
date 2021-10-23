@@ -50,37 +50,6 @@
   max-width: 58% !important;
 }
 
-.login-row {
-  border: 1px solid rgb(211, 210, 210);
-  border-radius:0px 0px 5px 5px;
-  width: 49%;
-  margin: auto;
-  display: block;
-  height: 328px;
-  padding: 64px;
-  box-shadow: 6px 6px 15px rgb(212, 212, 212);
-  font-size: 17px;
-    color: #646464;
-    letter-spacing: 1px;
-    font-weight: 600;
-    font-family: sans-serif;
-}
-
-.login-row button {
-  float: right;
-}
-.login-h1{
-    max-width: 49%;
-    
-    margin: auto;
-    background: #61bb61;
-    text-align: center;
-    padding: 28px;
-    color: white;
-    letter-spacing: 6px;
-    font-size: 50px;
-    box-shadow: 9px 4px 18px rgb(212 212 212);
-}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

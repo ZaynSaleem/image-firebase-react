@@ -12,6 +12,11 @@ import {
   useParams,
 } from "react-router-dom";
 import Index from "./pages/Home";
+import SignUp from "./pages/auth/sign-up";
+import SignIn from "./pages/auth/sign-in";
+import AddDetail from "./pages/Detail/add-detail";
+import ShowDetail from "./pages/Detail/show-detail";
+
 
 ReactDOM.render(
   // <React.StrictMode>
@@ -20,11 +25,20 @@ ReactDOM.render(
 
   <Router>
     <Switch>
-      <Route exact path="/">
+    <Route exact path="/">
         <App />
+      </Route>
+      <Route exact path="/sign-up">
+        <SignUp />
       </Route>
       <Route path="/Index">
         <Index />
+      </Route>
+      <Route path="/add-detail">
+        <AddDetail/>
+      </Route>
+      <Route path="/show-detail">
+        <ShowDetail/>
       </Route>
     </Switch>
   </Router>,

@@ -1,14 +1,10 @@
-// import logo from "./logo.svg";
 import "../../App.css";
 import "../Home/style.css";
 import Swal from "sweetalert2";
-import { FaUserPlus, FaPlus, FaTrashAlt, FaRegEdit } from "react-icons/fa";
+import { FaUserPlus, FaPlus, FaTrashAlt, FaRegEdit, FaEye } from "react-icons/fa";
 
-//   import MdAdd from '@material-ui/icons/add';
-//   import MdClose from '@material-ui/icons/clear';
 import {
   InputGroup,
-
   InputGroupText,
   Input,
   Table,
@@ -22,13 +18,12 @@ import {
   ModalFooter,
 } from "reactstrap";
 import Header from "../../components/header";
-// import { Container, Button, Link } from 'react-floating-action-button'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-
+import { Route, Link, useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
+import firebase, { db } from "../../config/firebase";
 
 const Index = () => {
+  let history = useHistory();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,12 +34,38 @@ const Index = () => {
   let [isOpen, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-
+  let arr = [];
   useEffect(() => {
-    let get = JSON.parse(localStorage.getItem("employee"));
-    if (get && get.length) {
-      setData(get);
-    }
+    let get = JSON.parse(localStorage.getItem("user-sign-in"));
+    // if (get && get.length) {
+    //   setData(get);
+    // }
+    db.collection("user-details")
+      .get()
+      .then((querysnapshot) => {
+        querysnapshot.forEach((doc) => {
+          if (doc.data().userid == get) {
+            let obj = {
+              id : doc.id,
+              title : doc.data().title,
+              description : doc.data().description,
+              date : doc.data().date
+            }
+            arr.push(obj)
+          }
+          // console.log(doc.id);
+        });
+        setData(arr);
+        // let res = arr.filter((x) => x.userid === get ? console.log(x.data()):console.log("not matched"))
+        // console.log(arr);
+      });
+      // console.log(arr);
+    // let res =  arr.filter((x) => {
+    //     return(
+    //       x.userid === get
+    //     )
+    //   })
+    //   console.log(res);
   }, []);
 
   const toggle = () => {
@@ -129,13 +150,19 @@ const Index = () => {
       setData(dupdata);
       localStorage.setItem("employee", JSON.stringify(dupdata));
     } else {
-      setData([obj])
+      setData([obj]);
       localStorage.setItem("employee", JSON.stringify([obj]));
     }
     // setData([...data, obj]);
     setModal(false);
   };
-  // console.log(data);
+
+const showData = (id) => {
+  console.log(id);
+  localStorage.setItem('user-edit-id',JSON.stringify(id));
+  history.push('/show-detail')
+}
+
   let count = 0;
   return (
     <div className="App">
@@ -145,51 +172,61 @@ const Index = () => {
           <thead className="table-header">
             <tr>
               <th>S No</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Salary</th>
-              <th>Joining Date</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Date</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {!data.length ? (
-             <tr className="text-center">
-               <h5>NO DATA</h5>
-             </tr> 
-            ):(data.map((per, index) => (
-              <tr key={index}>
-                <td>{++count}</td>
-                <td>{per.firstName}</td>
-                <td>{per.lastName}</td>
-                <td>{per.Email}</td>
-                <td>{per.salary}</td>
-                <td>{per.date}</td>
-                <td>
-                  {
-                    <Button
-                      color="outline-danger"
-                      onClick={() => dltEmp(index)}
-                    >
-                      <FaTrashAlt />
-                    </Button>
-                  }
-                  {
-                    <Button
-                      className="ms-3"
-                      color="outline-success"
-                      onClick={() => editEmp(index)}
-                    >
-                      <FaRegEdit />
-                    </Button>
-                  }
-                </td>
+              <tr className="text-center">
+                <h5>NO DATA</h5>
               </tr>
-            )))}
+            ) : (
+              data.map((per, index) => (
+                <tr key={index}>
+                  <td>{++count}</td>
+                  <td>{per.title}</td>
+                  <td>{per.description}</td>
+                  <td>{per.date}</td>
+                  <td>
+                    {
+                      <Button
+                        color="outline-danger"
+                        onClick={() => dltEmp(index)}
+                      >
+                        <FaTrashAlt />
+                      </Button>
+                    }
+                    {
+                      <Button
+                        className="ms-3"
+                        color="outline-success"
+                        onClick={() => editEmp(index)}
+                      >
+                        <FaRegEdit />
+                      </Button>
+                    }
+                    {
+                       <Button
+                       className="ms-3"
+                       color="outline-primary"
+                       onClick={() => showData(per.id)}
+                     >
+                       <FaEye />
+                     </Button>
+                    }
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </Table>
-        <Button className="btn-add-user" onClick={toggle}>
+        <Button
+          className="btn-add-user"
+          onClick={() => history.push("/add-detail")}
+        >
           <FaUserPlus />
         </Button>{" "}
       </Container>
