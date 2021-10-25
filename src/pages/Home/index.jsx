@@ -1,7 +1,13 @@
 import "../../App.css";
 import "../Home/style.css";
 import Swal from "sweetalert2";
-import { FaUserPlus, FaPlus, FaTrashAlt, FaRegEdit, FaEye } from "react-icons/fa";
+import {
+  FaUserPlus,
+  FaPlus,
+  FaTrashAlt,
+  FaRegEdit,
+  FaEye,
+} from "react-icons/fa";
 
 import {
   InputGroup,
@@ -46,92 +52,17 @@ const Index = () => {
         querysnapshot.forEach((doc) => {
           if (doc.data().userid == get) {
             let obj = {
-              id : doc.id,
-              title : doc.data().title,
-              description : doc.data().description,
-              date : doc.data().date
-            }
-            arr.push(obj)
+              id: doc.id,
+              title: doc.data().title,
+              description: doc.data().description,
+              date: doc.data().date,
+            };
+            arr.push(obj);
           }
-          // console.log(doc.id);
         });
         setData(arr);
-        // let res = arr.filter((x) => x.userid === get ? console.log(x.data()):console.log("not matched"))
-        // console.log(arr);
       });
-      // console.log(arr);
-    // let res =  arr.filter((x) => {
-    //     return(
-    //       x.userid === get
-    //     )
-    //   })
-    //   console.log(res);
   }, []);
-
-  const toggle = () => {
-    setModal(!modal);
-    setIsUpdate(false);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setSalary("");
-    setDate("");
-  };
-
-  const closeBtn = (
-    <button className="close" onClick={toggle}>
-      &times;
-    </button>
-  );
-
-  const updateEmp = () => {
-    let dupData = [...data];
-
-    dupData[isIndex].firstName = firstName;
-    dupData[isIndex].lastName = lastName;
-    dupData[isIndex].Email = email;
-    dupData[isIndex].salary = salary;
-    dupData[isIndex].date = date;
-
-    setData(dupData);
-    localStorage.setItem("employee", JSON.stringify(dupData));
-
-    setModal(false);
-  };
-
-  const editEmp = (edit) => {
-    setModal(true);
-    setIsUpdate(true);
-    setIsIndex(edit);
-    setFirstName(data[edit].firstName);
-    setLastName(data[edit].lastName);
-    setEmail(data[edit].Email);
-    setSalary(data[edit].salary);
-    setDate(data[edit].date);
-  };
-  // console.log(isIndex);
-
-  const dltEmp = (e) => {
-    // console.log(e);
-    data.map((per, index) => {
-      // console.log(index);
-      if (e == index) {
-        console.log("Matched !" + index + " &  " + e);
-        // let updatedData = data.splice(e, 1);
-        let dupdata = [...data];
-        dupdata.splice(e, 1);
-        setData(dupdata);
-        localStorage.setItem("employee", JSON.stringify(dupdata));
-      }
-    });
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "User deleted",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  };
 
   const addEmp = () => {
     let obj = {
@@ -157,11 +88,11 @@ const Index = () => {
     setModal(false);
   };
 
-const showData = (id) => {
-  console.log(id);
-  localStorage.setItem('user-edit-id',JSON.stringify(id));
-  history.push('/show-detail')
-}
+  const showData = (id) => {
+    console.log(id);
+    localStorage.setItem("user-edit-id", JSON.stringify(id));
+    history.push("/show-detail");
+  };
 
   let count = 0;
   return (
@@ -181,7 +112,7 @@ const showData = (id) => {
           <tbody>
             {!data.length ? (
               <tr className="text-center">
-                <h5>NO DATA</h5>
+                <td><h5>NO DATA</h5></td>
               </tr>
             ) : (
               data.map((per, index) => (
@@ -193,29 +124,12 @@ const showData = (id) => {
                   <td>
                     {
                       <Button
-                        color="outline-danger"
-                        onClick={() => dltEmp(index)}
-                      >
-                        <FaTrashAlt />
-                      </Button>
-                    }
-                    {
-                      <Button
                         className="ms-3"
-                        color="outline-success"
-                        onClick={() => editEmp(index)}
+                        color="outline-primary"
+                        onClick={() => showData(per.id)}
                       >
-                        <FaRegEdit />
+                        <FaEye />
                       </Button>
-                    }
-                    {
-                       <Button
-                       className="ms-3"
-                       color="outline-primary"
-                       onClick={() => showData(per.id)}
-                     >
-                       <FaEye />
-                     </Button>
                     }
                   </td>
                 </tr>
@@ -231,85 +145,7 @@ const showData = (id) => {
         </Button>{" "}
       </Container>
 
-      <div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle} close={closeBtn}>
-            Modal title
-          </ModalHeader>
-          <ModalBody>
-            <Container>
-              <Row>
-                <Col md={6}>
-                  <InputGroup>
-                    <Input
-                      onChange={(event) => setFirstName(event.target.value)}
-                      value={firstName}
-                      placeholder="FirstName"
-                    />
-                  </InputGroup>
-                </Col>
-
-                <Col md={6}>
-                  <InputGroup>
-                    <Input
-                      onChange={(event) => setLastName(event.target.value)}
-                      placeholder="LastName"
-                      value={lastName}
-                    />
-                  </InputGroup>
-                </Col>
-              </Row>
-
-              <Row className="py-4">
-                <Col>
-                  {" "}
-                  <InputGroup>
-                    <InputGroupText>@</InputGroupText>
-
-                    <Input
-                      onChange={(event) => setEmail(event.target.value)}
-                      placeholder="Email"
-                      type="email"
-                      value={email}
-                    />
-                  </InputGroup>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col md={6}>
-                  <Input
-                    type="number"
-                    placeholder="Salary"
-                    min={1000}
-                    onChange={(event) => setSalary(event.target.value)}
-                    value={salary}
-                  />
-                </Col>
-
-                <Col md={6}>
-                  <Input
-                    type="date"
-                    onChange={(event) => setDate(event.target.value)}
-                    value={date}
-                  />
-                </Col>
-              </Row>
-            </Container>
-          </ModalBody>
-          <ModalFooter>
-            {!isUpdate ? (
-              <Button color="primary" onClick={addEmp}>
-                Add Employee <FaPlus />
-              </Button>
-            ) : (
-              <Button color="primary" onClick={updateEmp}>
-                Update <FaPlus />
-              </Button>
-            )}
-          </ModalFooter>
-        </Modal>
-      </div>
+   
     </div>
   );
 };

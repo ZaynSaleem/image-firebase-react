@@ -19,11 +19,13 @@ import {
   Label,
 } from "reactstrap";
 import Header from "../../components/header";
-import { Route, Link } from "react-router-dom";
+import { Route, Link , useHistory} from "react-router-dom";
 import { useState, useEffect } from "react";
 import firebase, { db } from "../../config/firebase";
 
 const AddDetail = () => {
+  let history = useHistory();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -41,26 +43,38 @@ const AddDetail = () => {
 
   const handleImage = (e) => {
     // console.log(e.target.files);
-    let imgArr = [];
-    let imgUrls = [];
-    let u = URL.createObjectURL(e.target.files[0].name);
+    // let imgArr = [];
+    // let imgUrls = [];
+    // let u = URL.createObjectURL(e.target.files[0].name);
 
-
-    console.log(u);
+    // console.log(u);
     for (let i = 0; i < e.target.files.length; i++) {
       // imgArr.push(e.target.files[i]);
       let newImage = e.target.files[i];
       setImage((previmg) => [...previmg, newImage]);
     }
     // console.log(imgArr);
-    
-    console.log(imgUrls);
+
+    // console.log(imgUrls);
   };
   let i = 0;
   let num = Math.ceil(Math.random() * 100);
-  console.log(imagePreview);
+  // console.log(imagePreview);
+
   const addImage = () => {
-    console.log(i);
+    if (title === "" || description === "" || date === "" || !image.length ) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Please add data",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return false;
+    } 
+    else{
+
+   
     setBool(true);
     // console.log(image[i].name+""+image.length);
     let storageRef = firebase.storage().ref("images/" + image[i].name + num);
@@ -74,8 +88,7 @@ const AddDetail = () => {
           i = 0;
           console.log("added");
           console.log(arr);
-          // console.log(arr);
-          // setUrls(arr+1);
+        
           db.collection("user-details")
             .add({
               userid: userId,
@@ -98,9 +111,12 @@ const AddDetail = () => {
             timer: 1500,
           });
           setBool(false);
+          history.push("/Index")
         }
       });
     });
+  }
+
   };
 
   const addDetail = () => {
@@ -118,9 +134,12 @@ const AddDetail = () => {
 
       <div className="mt-4">
         <Container>
+          <div className="addDetailBox">
           <Row>
             <Col md={6}>
               <InputGroup>
+              <InputGroupText>TITLE</InputGroupText>
+
                 <Input
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder="Title"
@@ -130,6 +149,8 @@ const AddDetail = () => {
 
             <Col md={6}>
               <InputGroup>
+              <InputGroupText>DATE</InputGroupText>
+
                 <Input
                   type="date"
                   onChange={(event) => setDate(event.target.value)}
@@ -143,7 +164,7 @@ const AddDetail = () => {
             <Col md={6}>
               {" "}
               <InputGroup>
-                <InputGroupText>@</InputGroupText>
+                <InputGroupText>DESC</InputGroupText>
 
                 <Input
                   onChange={(event) => setDescription(event.target.value)}
@@ -184,13 +205,13 @@ const AddDetail = () => {
                   color="outline-success"
                   disabled
                 >
-                  <span class="spinner-border spinner-border-sm"></span>
-                  Adding...
+                  Adding
+                  <span className="spinner-border spinner-border-sm ms-2"></span>
                 </Button>
               )}
             </Col>
           </Row>
-          <Row>
+          {/* <Row>
             {image.length
               ? image.map((item, index) => {
                   console.log(item.name);
@@ -201,7 +222,8 @@ const AddDetail = () => {
                   );
                 })
               : console.log("No Data")}
-          </Row>
+          </Row> */}
+          </div>
         </Container>
       </div>
     </div>

@@ -16,7 +16,7 @@ import SignUp from "./pages/auth/sign-up";
 import SignIn from "./pages/auth/sign-in";
 import AddDetail from "./pages/Detail/add-detail";
 import ShowDetail from "./pages/Detail/show-detail";
-
+import PrivateRoute from "./PrivateRoute";
 
 ReactDOM.render(
   // <React.StrictMode>
@@ -25,21 +25,20 @@ ReactDOM.render(
 
   <Router>
     <Switch>
-    <Route exact path="/">
-        <App />
+      <Route exact path="/">
+        {/* <App /> */}
+        <SignIn />
       </Route>
+
       <Route exact path="/sign-up">
         <SignUp />
       </Route>
-      <Route path="/Index">
+      {/* <Route path="/Index">
         <Index />
-      </Route>
-      <Route path="/add-detail">
-        <AddDetail/>
-      </Route>
-      <Route path="/show-detail">
-        <ShowDetail/>
-      </Route>
+      </Route> */}
+      <PrivateRoute path="/Index" component={Index} />
+      <PrivateRoute path="/add-detail" component={AddDetail} />
+      <PrivateRoute path="/show-detail" component={ShowDetail} />
     </Switch>
   </Router>,
 

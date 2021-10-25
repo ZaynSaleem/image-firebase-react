@@ -58,6 +58,7 @@ function SignIn() {
                 <Input
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="Email"
+                  type="email"
                 />
               </InputGroup>
             </Col>
